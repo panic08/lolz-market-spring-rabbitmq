@@ -15,9 +15,9 @@ public class UserActivity {
     private String username;
     @Embedded
     private UserActivityData data;
+    @lombok.Data
     @NoArgsConstructor
     @AllArgsConstructor
-    @lombok.Data
     public static class UserActivityData{
         private String ipAddress;
         @Embedded

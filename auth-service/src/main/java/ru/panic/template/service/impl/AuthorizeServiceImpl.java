@@ -8,6 +8,7 @@ import ru.panic.template.dto.SignInRequestDto;
 import ru.panic.template.dto.SignInResponseDto;
 import ru.panic.template.entity.User;
 import ru.panic.template.entity.UserActivity;
+import ru.panic.template.entity.enums.Rank;
 import ru.panic.template.exception.InvalidCredentialsException;
 import ru.panic.template.repository.UserActivityRepository;
 import ru.panic.template.repository.UserRepository;
@@ -16,17 +17,18 @@ import ru.panic.template.service.AuthorizeService;
 @Service
 @Slf4j
 public class AuthorizeServiceImpl implements AuthorizeService {
+
     public AuthorizeServiceImpl(UserRepository userRepository, UserActivityRepository userActivityRepository, JwtUtil jwtUtil, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userActivityRepository = userActivityRepository;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
     }
+
     private final UserRepository userRepository;
     private final UserActivityRepository userActivityRepository;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
-
     @Override
     public SignInResponseDto signIn(SignInRequestDto signInRequest) {
         log.info("Starting method signIn");
@@ -52,6 +54,7 @@ public class AuthorizeServiceImpl implements AuthorizeService {
                         System.currentTimeMillis()
                         ));
         userActivityRepository.save(userActivity);
+
         return signInResponseDto;
     }
 
@@ -66,6 +69,23 @@ public class AuthorizeServiceImpl implements AuthorizeService {
         User user1 = new User();
         user1.setUsername(signInRequest.getUsername());
         user1.setPassword(passwordEncoder.encode(signInRequest.getPassword()));
+
+        User.Data data = new User.Data();
+        data.setBtcBalance(0D);
+        data.setEthBalance(0D);
+        data.setXrpBalance(0D);
+        data.setTrc20Balance(0D);
+        data.setTrxBalance(0D);
+        data.setLtcBalance(0D);
+        data.setSolBalance(0D);
+        data.setDogeBalance(0D);
+        data.setLevel(new User.Data.Level(Rank.BRONZE, 0D));
+        data.setIpAddress(signInRequest.getData().getIpAddress());
+        data.setIsMultiAccount(userRepository.existsByDataIpAddress(signInRequest.getData().getIpAddress()));
+        data.setIsAccountNonLocked(false);
+
+        user1.setData(data);
+        user1.setUserData(null);
         user1.setTimestamp(System.currentTimeMillis());
 
         userRepository.save(user1);
@@ -86,7 +106,9 @@ public class AuthorizeServiceImpl implements AuthorizeService {
                         signInRequest.getData().getBrowserInfo(),
                         System.currentTimeMillis()
                 ));
+
         userActivityRepository.save(userActivity);
+
         return signInResponseDto;
     }
 

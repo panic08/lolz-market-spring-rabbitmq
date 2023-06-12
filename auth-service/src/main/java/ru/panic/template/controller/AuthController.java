@@ -22,7 +22,7 @@ public class AuthController {
         return authorizeService.signUp(signInRequest);
     }
     @PostMapping("/v1/getInfoByJwt")
-    private User getInfoByJwt(@RequestParam(name = "jwtToken") String jwtToken){
+    private User getInfoByJwt(@RequestParam(name = "jwtToken") String jwtToken) {
         return authorizeService.getInfoByJwt(jwtToken);
-}
+    }
 }
