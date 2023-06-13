@@ -1,6 +1,8 @@
 package ru.panic.template.controller;
 
 import org.springframework.web.bind.annotation.*;
+import ru.panic.template.dto.ChangeDataRequestDto;
+import ru.panic.template.dto.ChangeUserDataRequestDto;
 import ru.panic.template.dto.SignInRequestDto;
 import ru.panic.template.dto.SignInResponseDto;
 import ru.panic.template.entity.User;
@@ -24,5 +26,19 @@ public class AuthController {
     @PostMapping("/v1/getInfoByJwt")
     private User getInfoByJwt(@RequestParam(name = "jwtToken") String jwtToken) {
         return authorizeService.getInfoByJwt(jwtToken);
+    }
+    @PutMapping("/auth/changeUserData")
+    private User changeUserData(
+            @RequestHeader(name = "jwtToken") String jwtToken,
+            @RequestBody ChangeUserDataRequestDto request
+    ){
+        return authorizeService.changeUserData(jwtToken, request);
+    }
+    @PutMapping("/auth/changeData")
+    private User changeData(
+            @RequestHeader(name = "jwtToken") String jwtToken,
+            @RequestBody ChangeDataRequestDto request
+    ){
+        return authorizeService.changeData(jwtToken, request);
     }
 }

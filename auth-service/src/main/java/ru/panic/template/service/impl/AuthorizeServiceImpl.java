@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.panic.security.jwt.JwtUtil;
+import ru.panic.template.dto.ChangeDataRequestDto;
+import ru.panic.template.dto.ChangeUserDataRequestDto;
 import ru.panic.template.dto.SignInRequestDto;
 import ru.panic.template.dto.SignInResponseDto;
 import ru.panic.template.entity.User;
@@ -48,7 +50,6 @@ public class AuthorizeServiceImpl implements AuthorizeService {
         userActivity.setData(
                 new UserActivity.UserActivityData(
                         signInRequest.getData().getIpAddress(),
-                        signInRequest.getData().getGeolocation(),
                         signInRequest.getData().getDeviceInfo(),
                         signInRequest.getData().getBrowserInfo(),
                         System.currentTimeMillis()
@@ -101,7 +102,6 @@ public class AuthorizeServiceImpl implements AuthorizeService {
         userActivity.setData(
                 new UserActivity.UserActivityData(
                         signInRequest.getData().getIpAddress(),
-                        signInRequest.getData().getGeolocation(),
                         signInRequest.getData().getDeviceInfo(),
                         signInRequest.getData().getBrowserInfo(),
                         System.currentTimeMillis()
@@ -118,5 +118,39 @@ public class AuthorizeServiceImpl implements AuthorizeService {
             throw new InvalidCredentialsException("Неверный JWT токен");
         }
         return userRepository.findUserByUsername(jwtUtil.extractUsername(jwtToken));
+    }
+
+    @Override
+    public User changeUserData(String jwtToken, ChangeUserDataRequestDto request) {
+        if(!jwtUtil.isJwtValid(jwtToken) || jwtUtil.isTokenExpired(jwtToken)){
+            throw new InvalidCredentialsException("Неверный JWT токен");
+        }
+        User user = userRepository.findUserByUsername(jwtUtil.extractUsername(jwtToken));
+        user.getUserData().setFirstname(request.getFirstname());
+        user.getUserData().setLastname(request.getLastname());
+        user.getUserData().setBirthday(request.getBirthday());
+        user.getUserData().setGender(request.getGender());
+        user.getUserData().setAddress(request.getAddress());
+
+        userRepository.save(user);
+        return user;
+    }
+
+    @Override
+    public User changeData(String jwtToken, ChangeDataRequestDto request) {
+        if(!jwtUtil.isJwtValid(jwtToken) || jwtUtil.isTokenExpired(jwtToken)){
+            throw new InvalidCredentialsException("Неверный JWT токен");
+        }
+
+        User user = userRepository.findUserByUsername(jwtUtil.extractUsername(jwtToken));
+
+        if(!passwordEncoder.matches(request.getOldPassword(), user.getPassword())){
+            throw new InvalidCredentialsException("Неверный старый пароль");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+
+        userRepository.save(user);
+        return user;
     }
 }

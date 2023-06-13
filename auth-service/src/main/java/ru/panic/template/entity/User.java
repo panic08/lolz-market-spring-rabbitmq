@@ -9,7 +9,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.panic.template.entity.enums.Gender;
 import ru.panic.template.entity.enums.Rank;
-
 import java.util.Collection;
 
 @Entity
@@ -36,7 +35,6 @@ public class User implements UserDetails {
         private Double ltcBalance;
         private Double solBalance;
         private Double trxBalance;
-        private Double trc20Balance;
         private Double xrpBalance;
         private Double dogeBalance;
         private String ipAddress;
@@ -90,7 +88,7 @@ public class User implements UserDetails {
     public boolean isAccountNonExpired() {
         return false;
     }
-
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return false;

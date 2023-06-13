@@ -21,21 +21,11 @@ public class UserActivity {
     public static class UserActivityData{
         private String ipAddress;
         @Embedded
-        private Geolocation geolocation;
-        @Embedded
         private DeviceInfo deviceInfo;
         @Embedded
         private BrowserInfo browserInfo;
         private Long timestamp;
 
-    }
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @lombok.Data
-    public static class Geolocation{
-        private Double latitude;
-        private Double longitude;
-        private Double accuracy;
     }
     @NoArgsConstructor
     @AllArgsConstructor

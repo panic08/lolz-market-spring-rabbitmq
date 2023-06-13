@@ -9,7 +9,7 @@ public class CorsConfiguration implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/auth/**")
                 .allowedOrigins("*")
-                .allowedMethods("POST")
+                .allowedMethods("POST", "PUT")
                 .allowedHeaders("*");
         registry.addMapping("/api/v1/getInfoByJwt")
                 .allowedOrigins("http://localhost:8081")
