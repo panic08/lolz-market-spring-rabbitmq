@@ -75,7 +75,6 @@ public class AuthorizeServiceImpl implements AuthorizeService {
         data.setBtcBalance(0D);
         data.setEthBalance(0D);
         data.setXrpBalance(0D);
-        data.setTrc20Balance(0D);
         data.setTrxBalance(0D);
         data.setLtcBalance(0D);
         data.setSolBalance(0D);
