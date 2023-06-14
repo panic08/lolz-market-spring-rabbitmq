@@ -17,8 +17,10 @@ public class NetworkRabbit {
     private String solWallet;
     @Value("${ru.panic.networks.trx}")
     private String trxWallet;
-    @Value("${ru.panic.networks.xrp}")
-    private String xrpWallet;
+    @Value("${ru.panic.networks.matic}")
+    private String maticWallet;
     @Value("${ru.panic.networks.doge}")
     private String dogeWallet;
+    @Value("${ru.panic.api.eth}")
+    private String ethApiToken;
 }

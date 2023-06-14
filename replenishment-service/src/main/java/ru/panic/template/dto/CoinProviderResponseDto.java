@@ -7,7 +7,7 @@ public class CoinProviderResponseDto {
     private CoinDto dogecoin;
     private CoinDto ethereum;
     private CoinDto litecoin;
-    private CoinDto ripple;
+    private CoinDto maticNetwork;
     private CoinDto solana;
     private CoinDto tron;
 

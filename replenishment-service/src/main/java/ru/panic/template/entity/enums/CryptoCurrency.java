@@ -6,6 +6,6 @@ public enum CryptoCurrency {
     LTC,
     SOL,
     TRX,
-    XRP,
+    MATIC,
     DOGE
 }
