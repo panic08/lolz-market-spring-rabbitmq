@@ -22,12 +22,12 @@ public class UserResponseDto {
         private Double btcBalance;
         private Double ethBalance;
         private Double ltcBalance;
-        private Double solBalance;
+        private Double tetherERC20Balance;
         private Double trxBalance;
         private Double xrpBalance;
-        private Double dogeBalance;
+        private Double maticBalance;
+        private Double tonBalance;
         private String ipAddress;
-
         private Level level;
         private Boolean isAccountNonLocked;
         private Boolean isMultiAccount;
