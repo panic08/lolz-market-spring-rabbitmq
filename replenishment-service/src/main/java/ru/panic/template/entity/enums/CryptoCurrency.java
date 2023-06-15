@@ -7,5 +7,6 @@ public enum CryptoCurrency {
     TETHER_ERC20,
     TRX,
     MATIC,
-    XRP
+    XRP,
+    TON
 }

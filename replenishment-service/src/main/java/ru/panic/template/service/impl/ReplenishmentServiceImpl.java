@@ -36,7 +36,8 @@ public class ReplenishmentServiceImpl implements ReplenishmentService {
     private final ReplenishmentServiceHashRepository replenishmentServiceHashRepository;
     private final RabbitTemplate rabbitTemplate;
     private static final String AUTH_URL = "http://localhost:8080/api/v1/getInfoByJwt?jwtToken=";
-    private static final String COIN_PROVIDER_URL = "https://api.coingecko.com/api/v3/simple/price?ids=tron,bitcoin,ethereum,litecoin,ripple,matic-network,tether&vs_currencies=rub,eur,usd,pln";
+    private static final String COIN_PROVIDER_URL =
+            "https://api.coingecko.com/api/v3/simple/price?ids=tron,bitcoin,ethereum,litecoin,ripple,matic-network,tether,the-open-network&vs_currencies=rub,eur,usd,pln";
     @Override
     public ReplenishmentResponseDto payByCrypto(String jwtToken, ReplenishmentRequestDto request) {
         ResponseEntity<UserResponseDto> response = restTemplate.exchange(AUTH_URL + jwtToken, HttpMethod.POST, null, UserResponseDto.class);
@@ -140,6 +141,15 @@ public class ReplenishmentServiceImpl implements ReplenishmentService {
                     case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getRipple().getPln(), 1e6);
                 }
                 replenishmentResponseDto.setWalletId(networkRabbit.getXrpWallet());
+            }
+            case TON -> {
+                switch (request.getCurrency()) {
+                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTheOpenNetwork().getRub(), 1e5);
+                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTheOpenNetwork().getEur(), 1e5);
+                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTheOpenNetwork().getUsd(), 1e5);
+                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTheOpenNetwork().getPln(), 1e5);
+                }
+                replenishmentResponseDto.setWalletId(networkRabbit.getTonWallet());
             }
         }
 
@@ -429,6 +439,51 @@ public class ReplenishmentServiceImpl implements ReplenishmentService {
                                     replenishmentResponseDto.getAmount()
                                     &&
                                     Long.parseLong(tetherERC20ResponseDto.getBody().getResult().get(0).getTimeStamp())>currentTime
+                            ){
+                                ObjectMapper objectMapper = new ObjectMapper();
+                                String jsonString;
+                                try {
+                                    jsonString = objectMapper.writeValueAsString(replenishmentServiceHash);
+                                } catch (JsonProcessingException e) {
+                                    throw new RuntimeException(e);
+                                }
+                                rabbitTemplate.convertAndSend("replenishment-queue", jsonString);
+                                replenishmentServiceHashRepository.delete(replenishmentServiceHash);
+                                return;
+                            }
+                            counter++;
+
+                            if (counter == 12 * 4) {
+                                replenishmentServiceHashRepository.delete(replenishmentServiceHash);
+                                timer.cancel(); // Отменяем таймер после 12 минут (12 * 4 = 48 повторений с интервалом в 3 секунды)
+                            }
+                        }
+                    };
+
+                    long delay = 0; // Задержка перед началом выполнения задачи
+                    long period = 4000; // Интервал между повторениями задачи (4 секунды = 4000 миллисекунд)
+
+                    timer.scheduleAtFixedRate(task, delay, period);
+                }
+                case TON -> {
+                    Timer timer = new Timer();
+                    long currentTime = System.currentTimeMillis();
+                    TimerTask task = new TimerTask() {
+                        int counter = 0;
+                        public void run() {
+
+                            ResponseEntity<TonResponseDto> tonResponseDto = restTemplate
+                                    .exchange(
+                                            "https://stage.toncenter.com/api/v2/getTransactions?address=" + networkRabbit.getTonWallet() + "&limit=3&to_lt=0&archival=false",
+                                            HttpMethod.GET,
+                                            null,
+                                            TonResponseDto.class
+                                    );
+                            if(Long.parseLong(tonResponseDto.getBody().getResult().get(0).getIn_msg().getValue())/1e9
+                                    ==
+                                    replenishmentResponseDto.getAmount()
+                                    &&
+                                    tonResponseDto.getBody().getResult().get(0).getUtime()>currentTime
                             ){
                                 ObjectMapper objectMapper = new ObjectMapper();
                                 String jsonString;

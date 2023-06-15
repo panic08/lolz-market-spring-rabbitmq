@@ -8,6 +8,7 @@ public class CoinProviderResponseDto {
     private CoinDto ethereum;
     private CoinDto litecoin;
     private CoinDto maticNetwork;
+    private CoinDto theOpenNetwork;
     private CoinDto tether;
     private CoinDto tron;
 
