@@ -1,7 +1,6 @@
 package ru.panic.template.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Embedded;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,7 +27,7 @@ public class UserResponseDto {
         private Double xrpBalance;
         private Double dogeBalance;
         private String ipAddress;
-        @Embedded
+
         private Level level;
         private Boolean isAccountNonLocked;
         private Boolean isMultiAccount;
@@ -48,7 +47,6 @@ public class UserResponseDto {
         private String lastname;
         private String birthday;
         private Gender gender;
-        @Embedded
         private Address address;
         @NoArgsConstructor
         @AllArgsConstructor
