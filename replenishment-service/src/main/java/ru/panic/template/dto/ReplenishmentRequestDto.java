@@ -1,8 +1,8 @@
 package ru.panic.template.dto;
 
 import lombok.Data;
-import ru.panic.template.entity.enums.CryptoCurrency;
-import ru.panic.template.entity.enums.Currency;
+import ru.panic.template.enums.CryptoCurrency;
+import ru.panic.template.enums.Currency;
 
 @Data
 public class ReplenishmentRequestDto {

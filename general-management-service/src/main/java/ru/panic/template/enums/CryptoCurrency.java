@@ -1,4 +1,4 @@
-package ru.panic.template.entity.enums;
+package ru.panic.template.enums;
 
 public enum CryptoCurrency {
     BTC,

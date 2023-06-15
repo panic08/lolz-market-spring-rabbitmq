@@ -5,8 +5,8 @@ import jakarta.persistence.Embedded;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.panic.template.entity.enums.Gender;
-import ru.panic.template.entity.enums.Rank;
+import ru.panic.template.enums.Gender;
+import ru.panic.template.enums.Rank;
 @Data
 public class UserResponseDto {
     private Long id;

@@ -5,16 +5,12 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import ru.panic.template.enums.Gender;
 import ru.panic.template.enums.Rank;
-import java.util.Collection;
-
 @Entity
 @Table(name = "users")
 @Data
-public class User implements UserDetails {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -70,38 +66,5 @@ public class User implements UserDetails {
             private Integer postcode;
             private String city;
         }
-    }
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
-
-    @Override
-    public String getPassword() {
-        return this.password;
-    }
-    @Override
-    public String getUsername() {
-        return this.username;
-    }
-    @JsonIgnore
-    @Override
-    public boolean isAccountNonExpired() {
-        return false;
-    }
-    @JsonIgnore
-    @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
-    @JsonIgnore
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return false;
-    }
-    @JsonIgnore
-    @Override
-    public boolean isEnabled() {
-        return false;
     }
 }
