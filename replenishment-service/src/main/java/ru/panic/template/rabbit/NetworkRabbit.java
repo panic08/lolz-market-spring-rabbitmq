@@ -14,13 +14,13 @@ public class NetworkRabbit {
     @Value("${ru.panic.networks.ltc}")
     private String ltcWallet;
     @Value("${ru.panic.networks.sol}")
-    private String solWallet;
+    private String tetherERC20Wallet;
     @Value("${ru.panic.networks.trx}")
     private String trxWallet;
     @Value("${ru.panic.networks.matic}")
     private String maticWallet;
     @Value("${ru.panic.networks.doge}")
-    private String dogeWallet;
+    private String xrpWallet;
     @Value("${ru.panic.api.eth}")
     private String ethApiToken;
 }

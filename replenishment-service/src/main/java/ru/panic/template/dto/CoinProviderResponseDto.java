@@ -4,11 +4,11 @@ import lombok.Getter;
 @Getter
 public class CoinProviderResponseDto {
     private CoinDto bitcoin;
-    private CoinDto dogecoin;
+    private CoinDto ripple;
     private CoinDto ethereum;
     private CoinDto litecoin;
     private CoinDto maticNetwork;
-    private CoinDto solana;
+    private CoinDto tether;
     private CoinDto tron;
 
     @Getter

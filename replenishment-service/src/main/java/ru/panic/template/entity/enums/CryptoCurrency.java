@@ -4,8 +4,8 @@ public enum CryptoCurrency {
     BTC,
     ETH,
     LTC,
-    SOL,
+    TETHER_ERC20,
     TRX,
     MATIC,
-    DOGE
+    XRP
 }

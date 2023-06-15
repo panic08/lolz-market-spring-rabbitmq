@@ -3,8 +3,7 @@ package ru.panic.template.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.panic.template.dto.CoinProviderResponseDto;
@@ -12,6 +11,7 @@ import ru.panic.template.dto.ReplenishmentRequestDto;
 import ru.panic.template.dto.ReplenishmentResponseDto;
 import ru.panic.template.dto.UserResponseDto;
 import ru.panic.template.dto.crypto.*;
+import ru.panic.template.dto.crypto.xrp.XrpAccountTxRequest;
 import ru.panic.template.exception.InvalidCredentialsException;
 import ru.panic.template.rabbit.NetworkRabbit;
 import ru.panic.template.repository.ReplenishmentServiceHashRepository;
@@ -36,7 +36,7 @@ public class ReplenishmentServiceImpl implements ReplenishmentService {
     private final ReplenishmentServiceHashRepository replenishmentServiceHashRepository;
     private final RabbitTemplate rabbitTemplate;
     private static final String AUTH_URL = "http://localhost:8080/api/v1/getInfoByJwt?jwtToken=";
-    private static final String COIN_PROVIDER_URL = "https://api.coingecko.com/api/v3/simple/price?ids=tron,bitcoin,ethereum,litecoin,dogecoin&vs_currencies=rub,eur,usd,pln";
+    private static final String COIN_PROVIDER_URL = "https://api.coingecko.com/api/v3/simple/price?ids=tron,bitcoin,ethereum,litecoin,ripple,matic-network,tether&vs_currencies=rub,eur,usd,pln";
     @Override
     public ReplenishmentResponseDto payByCrypto(String jwtToken, ReplenishmentRequestDto request) {
         ResponseEntity<UserResponseDto> response = restTemplate.exchange(AUTH_URL + jwtToken, HttpMethod.POST, null, UserResponseDto.class);
@@ -105,14 +105,14 @@ public class ReplenishmentServiceImpl implements ReplenishmentService {
                 }
                 replenishmentResponseDto.setWalletId(networkRabbit.getLtcWallet());
             }
-            case SOL -> {
+            case TETHER_ERC20 -> {
                 switch (request.getCurrency()) {
-                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getSolana().getRub(), 1e9);
-                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getSolana().getEur(), 1e9);
-                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getSolana().getUsd(), 1e9);
-                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getSolana().getPln(), 1e9);
+                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTether().getRub(), 1e6);
+                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTether().getEur(), 1e6);
+                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTether().getUsd(), 1e6);
+                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTether().getPln(), 1e6);
                 }
-                replenishmentResponseDto.setWalletId(networkRabbit.getSolWallet());
+                replenishmentResponseDto.setWalletId(networkRabbit.getTetherERC20Wallet());
             }
             case TRX -> {
                 switch (request.getCurrency()) {
@@ -132,20 +132,19 @@ public class ReplenishmentServiceImpl implements ReplenishmentService {
                 }
                 replenishmentResponseDto.setWalletId(networkRabbit.getMaticWallet());
             }
-            case DOGE -> {
+            case XRP -> {
                 switch (request.getCurrency()) {
-                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getDogecoin().getRub(), 1e8);
-                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getDogecoin().getEur(), 1e8);
-                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getDogecoin().getUsd(), 1e8);
-                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getDogecoin().getPln(), 1e8);
+                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getRipple().getRub(), 1e6);
+                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getRipple().getEur(), 1e6);
+                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getRipple().getUsd(), 1e6);
+                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getRipple().getPln(), 1e6);
                 }
-                replenishmentResponseDto.setWalletId(networkRabbit.getDogeWallet());
+                replenishmentResponseDto.setWalletId(networkRabbit.getXrpWallet());
             }
         }
 
         ReplenishmentServiceHash replenishmentServiceHash = new ReplenishmentServiceHash();
         replenishmentServiceHash.setUsername(response.getBody().getUsername());
-        replenishmentServiceHash.setWalletId(request.getWalletId());
         replenishmentServiceHash.setCryptoCurrency(request.getCryptoCurrency());
         replenishmentServiceHash.setAmount(replenishmentResponseDto.getAmount());
         replenishmentServiceHash.setTimestamp(System.currentTimeMillis());
@@ -196,6 +195,7 @@ public class ReplenishmentServiceImpl implements ReplenishmentService {
 
                     timer.scheduleAtFixedRate(task, delay, period);
                 }
+
                 case ETH -> {
                     Timer timer = new Timer();
                     long currentTime = System.currentTimeMillis();
@@ -237,6 +237,7 @@ public class ReplenishmentServiceImpl implements ReplenishmentService {
 
                     timer.scheduleAtFixedRate(task, delay, period);
                 }
+
                 case LTC -> {
                     Timer timer = new Timer();
                     long currentTime = System.currentTimeMillis();
@@ -245,7 +246,7 @@ public class ReplenishmentServiceImpl implements ReplenishmentService {
                         public void run() {
                             ResponseEntity<LitecoinResponseDto> liteCoinResponseDto = restTemplate
                                     .getForEntity("https://api.tatum.io/v3/litecoin/transaction/address/"
-                                            + networkRabbit.getLtcWallet() + "?pageSize=3", LitecoinResponseDto.class);
+                                            + networkRabbit.getLtcWallet() + "?pageSize=3&sort=desc", LitecoinResponseDto.class);
                             if(Double.parseDouble(liteCoinResponseDto
                                     .getBody().getReplenishments()
                                     .get(0)
@@ -289,7 +290,7 @@ public class ReplenishmentServiceImpl implements ReplenishmentService {
                         public void run() {
                             ResponseEntity<MaticResponseDto> maticResponseDto = restTemplate
                                     .getForEntity("https://api.tatum.io/v3/polygon/account/transaction/"
-                                            + networkRabbit.getMaticWallet(), MaticResponseDto.class);
+                                            + networkRabbit.getMaticWallet() + "?pageSize=3&sort=desc", MaticResponseDto.class);
                             if ((double) Long.parseLong(
                                     maticResponseDto.getBody().getResponseDtos().get(0).getValue()
                             )/ 1e18 == replenishmentResponseDto.getAmount()
@@ -364,8 +365,96 @@ public class ReplenishmentServiceImpl implements ReplenishmentService {
 
                     timer.scheduleAtFixedRate(task, delay, period);
                 }
-                case DOGE -> {}
-                case SOL -> {}
+                case XRP -> {
+                    Timer timer = new Timer();
+                    long currentTime = System.currentTimeMillis();
+                    TimerTask task = new TimerTask() {
+                        int counter = 0;
+                        XrpAccountTxRequest request = new XrpAccountTxRequest(networkRabbit.getXrpWallet(), 3);
+                        HttpHeaders headers = new HttpHeaders();
+                        HttpEntity<XrpAccountTxRequest> entity = new HttpEntity<>(request, headers);
+                        public void run() {
+
+                            ResponseEntity<XrpResponseDto> xrpResponseDto = restTemplate
+                                    .exchange(
+                                            "https://s1.ripple.com:51234/",
+                                            HttpMethod.POST,
+                                            entity,
+                                            XrpResponseDto.class
+                                    );
+                            if(Double.parseDouble(xrpResponseDto.getBody().getResult().getTransactions().get(0).getTx().getAmount())/1e6
+                                    ==
+                                    replenishmentResponseDto.getAmount()
+                                    &&
+                                    xrpResponseDto.getBody().getResult().getTransactions().get(0).getTx().getDate()+946684800L>currentTime
+                            ){
+                                ObjectMapper objectMapper = new ObjectMapper();
+                                String jsonString;
+                                try {
+                                    jsonString = objectMapper.writeValueAsString(replenishmentServiceHash);
+                                } catch (JsonProcessingException e) {
+                                    throw new RuntimeException(e);
+                                }
+                                rabbitTemplate.convertAndSend("replenishment-queue", jsonString);
+                                replenishmentServiceHashRepository.delete(replenishmentServiceHash);
+                                return;
+                            }
+                            counter++;
+
+                            if (counter == 12 * 4) {
+                                replenishmentServiceHashRepository.delete(replenishmentServiceHash);
+                                timer.cancel(); // Отменяем таймер после 12 минут (12 * 4 = 48 повторений с интервалом в 3 секунды)
+                            }
+                        }
+                    };
+
+                    long delay = 0; // Задержка перед началом выполнения задачи
+                    long period = 4000; // Интервал между повторениями задачи (4 секунды = 4000 миллисекунд)
+
+                    timer.scheduleAtFixedRate(task, delay, period);
+                }
+                case TETHER_ERC20 -> {
+                    Timer timer = new Timer();
+                    long currentTime = System.currentTimeMillis();
+                    TimerTask task = new TimerTask() {
+                        int counter = 0;
+                        public void run() {
+                            ResponseEntity<TetherERC20ResponseDto> tetherERC20ResponseDto = restTemplate
+                                    .getForEntity("https://api.etherscan.io/api?module=account&action=tokentx&contractaddress=0xdac17f958d2ee523a2206206994597c13d831ec7&"
+                                            + networkRabbit.getEthWallet() + "&" + networkRabbit.getEthApiToken() + "&page=1&offset=5&sort=desc", TetherERC20ResponseDto.class);
+                            if(Double.parseDouble(tetherERC20ResponseDto.getBody().getResult().get(0).getValue())
+                                    /
+                                    (10^Integer.parseInt(tetherERC20ResponseDto.getBody().getResult().get(0).getTokenDecimal()))
+                                    ==
+                                    replenishmentResponseDto.getAmount()
+                                    &&
+                                    Long.parseLong(tetherERC20ResponseDto.getBody().getResult().get(0).getTimeStamp())>currentTime
+                            ){
+                                ObjectMapper objectMapper = new ObjectMapper();
+                                String jsonString;
+                                try {
+                                    jsonString = objectMapper.writeValueAsString(replenishmentServiceHash);
+                                } catch (JsonProcessingException e) {
+                                    throw new RuntimeException(e);
+                                }
+                                rabbitTemplate.convertAndSend("replenishment-queue", jsonString);
+                                replenishmentServiceHashRepository.delete(replenishmentServiceHash);
+                                return;
+                            }
+                            counter++;
+
+                            if (counter == 12 * 4) {
+                                replenishmentServiceHashRepository.delete(replenishmentServiceHash);
+                                timer.cancel(); // Отменяем таймер после 12 минут (12 * 4 = 48 повторений с интервалом в 3 секунды)
+                            }
+                        }
+                    };
+
+                    long delay = 0; // Задержка перед началом выполнения задачи
+                    long period = 4000; // Интервал между повторениями задачи (4 секунды = 4000 миллисекунд)
+
+                    timer.scheduleAtFixedRate(task, delay, period);
+                }
             }
         }).start();
 
