@@ -12,6 +12,8 @@ public class Replenishment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
     @Column(name = "username", nullable = false)
     private String username;
     @Column(name = "amount", nullable = false)

@@ -12,7 +12,7 @@ public class CorsConfiguration implements WebMvcConfigurer {
                 .allowedMethods("POST", "PUT")
                 .allowedHeaders("*");
         registry.addMapping("/api/v1/getInfoByJwt")
-                .allowedOrigins("http://localhost:8081")
+                .allowedOrigins("http://localhost:8081", "http://localhost:8083")
                 .allowedMethods("POST")
                 .allowedHeaders("*");
     }

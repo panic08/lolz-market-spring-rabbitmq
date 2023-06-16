@@ -34,6 +34,7 @@ public class User {
         private Double xrpBalance;
         private Double maticBalance;
         private Double tonBalance;
+        private Double demoBalance;
         private String ipAddress;
         @Embedded
         private Level level;

@@ -46,25 +46,54 @@ public class ReplenishmentServiceImpl implements ReplenishmentService {
             throw new InvalidCredentialsException("Неверный JWT токен");
         }
 
-        switch (request.getCurrency()){
-            case RUB -> {
-                if(request.getAmount().doubleValue() < 10){
-                    throw new InvalidCredentialsException("Минимальная сумма для пополнения российским рублем - 10 RUB");
+        switch (request.getCryptoCurrency()) {
+            case BTC, ETH, TETHER_ERC20, LTC -> {
+                switch (request.getCurrency()) {
+                    case RUB -> {
+                        if (request.getAmount().doubleValue() < 500) {
+                            throw new InvalidCredentialsException("Минимальная сумма для пополнения российским рублем - 500 RUB");
+                        }
+                    }
+                    case USD -> {
+                        if (request.getAmount().doubleValue() < 6) {
+                            throw new InvalidCredentialsException("Минимальная сумма для пополнения долларом США - 6.0$");
+                        }
+                    }
+                    case EUR -> {
+                        if (request.getAmount().doubleValue() < 5.5) {
+                            throw new InvalidCredentialsException("Минимальная сумма для пополнения европейским евро - 5.5€");
+                        }
+                    }
+                    case PLN -> {
+                        if (request.getAmount().doubleValue() < 24.5) {
+                            throw new InvalidCredentialsException("Минимальная сумма для пополнения польским злотым - 24.5 PLN");
+                        }
+                    }
                 }
             }
-            case USD -> {
-                if(request.getAmount().doubleValue() < 0.15){
-                    throw new InvalidCredentialsException("Минимальная сумма для пополнения долларом США - 0.15$");
-                }
-            }
-            case EUR -> {
-                if(request.getAmount().doubleValue() < 0.15){
-                    throw new InvalidCredentialsException("Минимальная сумма для пополнения европейским евро - 0.15€");
-                }
-            }
-            case PLN -> {
-                if(request.getAmount().doubleValue() < 0.50){
-                    throw new InvalidCredentialsException("Минимальная сумма для пополнения польским злотым - 0.35 PLN");
+
+            case TON, TRX, XRP, MATIC -> {
+                switch (request.getCurrency()) {
+                    case RUB -> {
+                        if (request.getAmount().doubleValue() < 90) {
+                            throw new InvalidCredentialsException("Минимальная сумма для пополнения российским рублем - 90 RUB");
+                        }
+                    }
+                    case USD -> {
+                        if (request.getAmount().doubleValue() < 1) {
+                            throw new InvalidCredentialsException("Минимальная сумма для пополнения долларом США - 1.0$");
+                        }
+                    }
+                    case EUR -> {
+                        if (request.getAmount().doubleValue() < 0.95) {
+                            throw new InvalidCredentialsException("Минимальная сумма для пополнения европейским евро - 0.95€");
+                        }
+                    }
+                    case PLN -> {
+                        if (request.getAmount().doubleValue() < 4) {
+                            throw new InvalidCredentialsException("Минимальная сумма для пополнения польским злотым - 4.0 PLN");
+                        }
+                    }
                 }
             }
         }
@@ -99,61 +128,62 @@ public class ReplenishmentServiceImpl implements ReplenishmentService {
             }
             case LTC -> {
                 switch (request.getCurrency()) {
-                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getLitecoin().getRub(), 1e6);
-                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getLitecoin().getEur(), 1e6);
-                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getLitecoin().getUsd(), 1e6);
-                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getLitecoin().getPln(), 1e6);
+                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getLitecoin().getRub(), 1e5);
+                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getLitecoin().getEur(), 1e5);
+                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getLitecoin().getUsd(), 1e5);
+                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getLitecoin().getPln(), 1e5);
                 }
                 replenishmentResponseDto.setWalletId(networkRabbit.getLtcWallet());
             }
             case TETHER_ERC20 -> {
                 switch (request.getCurrency()) {
-                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTether().getRub(), 1e6);
-                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTether().getEur(), 1e6);
-                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTether().getUsd(), 1e6);
-                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTether().getPln(), 1e6);
+                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTether().getRub(), 1e3);
+                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTether().getEur(), 1e3);
+                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTether().getUsd(), 1e3);
+                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTether().getPln(), 1e3);
                 }
                 replenishmentResponseDto.setWalletId(networkRabbit.getTetherERC20Wallet());
             }
             case TRX -> {
                 switch (request.getCurrency()) {
-                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTron().getRub(), 1e6);
-                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTron().getEur(), 1e6);
-                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTron().getUsd(), 1e6);
-                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTron().getPln(), 1e6);
+                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTron().getRub(), 1e3);
+                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTron().getEur(), 1e3);
+                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTron().getUsd(), 1e3);
+                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTron().getPln(), 1e3);
                 }
                 replenishmentResponseDto.setWalletId(networkRabbit.getTrxWallet());
             }
             case MATIC -> {
                 switch (request.getCurrency()) {
-                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getMaticNetwork().getRub(), 1e6);
-                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getMaticNetwork().getEur(), 1e6);
-                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getMaticNetwork().getUsd(), 1e6);
-                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getMaticNetwork().getPln(), 1e6);
+                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getMaticNetwork().getRub(), 1e3);
+                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getMaticNetwork().getEur(), 1e3);
+                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getMaticNetwork().getUsd(), 1e3);
+                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getMaticNetwork().getPln(), 1e3);
                 }
                 replenishmentResponseDto.setWalletId(networkRabbit.getMaticWallet());
             }
             case XRP -> {
                 switch (request.getCurrency()) {
-                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getRipple().getRub(), 1e6);
-                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getRipple().getEur(), 1e6);
-                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getRipple().getUsd(), 1e6);
-                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getRipple().getPln(), 1e6);
+                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getRipple().getRub(), 1e3);
+                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getRipple().getEur(), 1e3);
+                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getRipple().getUsd(), 1e3);
+                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getRipple().getPln(), 1e3);
                 }
                 replenishmentResponseDto.setWalletId(networkRabbit.getXrpWallet());
             }
             case TON -> {
                 switch (request.getCurrency()) {
-                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTheOpenNetwork().getRub(), 1e5);
-                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTheOpenNetwork().getEur(), 1e5);
-                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTheOpenNetwork().getUsd(), 1e5);
-                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTheOpenNetwork().getPln(), 1e5);
+                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTheOpenNetwork().getRub(), 1e3);
+                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTheOpenNetwork().getEur(), 1e3);
+                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTheOpenNetwork().getUsd(), 1e3);
+                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTheOpenNetwork().getPln(), 1e3);
                 }
                 replenishmentResponseDto.setWalletId(networkRabbit.getTonWallet());
             }
         }
 
         ReplenishmentServiceHash replenishmentServiceHash = new ReplenishmentServiceHash();
+        replenishmentServiceHash.setUserId(response.getBody().getId());
         replenishmentServiceHash.setUsername(response.getBody().getUsername());
         replenishmentServiceHash.setCryptoCurrency(request.getCryptoCurrency());
         replenishmentServiceHash.setAmount(replenishmentResponseDto.getAmount());
@@ -170,29 +200,28 @@ public class ReplenishmentServiceImpl implements ReplenishmentService {
                         int counter = 0;
                         public void run() {
                             ResponseEntity<BitcoinResponseDto> bitcoinResponseDto = restTemplate
-                                    .getForEntity("https://blockchain.info/rawaddr/" + networkRabbit.getBtcWallet() + "?limit=3", BitcoinResponseDto.class);
-                            if(bitcoinResponseDto
-                                    .getBody()
-                                    .getTxs()
-                                    .get(0)
-                                    .getInputs()
-                                    .get(0).getPrev_out().getValue()/1e8 == replenishmentResponseDto.getAmount()
-                                    &&
-                                    bitcoinResponseDto.getBody().getTxs().get(0).getTime() > currentTime
-                            ){
-                                ObjectMapper objectMapper = new ObjectMapper();
-                                String jsonString;
-                                try {
-                                    jsonString = objectMapper.writeValueAsString(replenishmentServiceHash);
-                                } catch (JsonProcessingException e) {
-                                    throw new RuntimeException(e);
-                                }
-                                rabbitTemplate.convertAndSend("replenishment-queue", jsonString);
-                                replenishmentServiceHashRepository.delete(replenishmentServiceHash);
-                                return;
-                            }
-                            counter++;
+                                    .getForEntity("https://blockchain.info/rawaddr/" + networkRabbit.getBtcWallet() + "?limit=5", BitcoinResponseDto.class);
 
+                            for (BitcoinResponseDto.TransactionDTO tx : bitcoinResponseDto.getBody().getTxs()) {
+                                for (BitcoinResponseDto.InputDTO input : tx.getInputs()) {
+                                    if(input.getPrev_out().getValue()/1e8 == replenishmentResponseDto.getAmount()
+                                            && tx.getTime() > currentTime
+                                    ){
+                                        ObjectMapper objectMapper = new ObjectMapper();
+                                        String jsonString;
+                                        try {
+                                            jsonString = objectMapper.writeValueAsString(replenishmentServiceHash);
+                                        } catch (JsonProcessingException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                        rabbitTemplate.convertAndSend("replenishment-queue", jsonString);
+                                        replenishmentServiceHashRepository.delete(replenishmentServiceHash);
+                                        return;
+                                    }
+                                }
+                            }
+
+                            counter++;
                             if (counter == 12 * 4) {
                                 replenishmentServiceHashRepository.delete(replenishmentServiceHash);
                                 timer.cancel(); // Отменяем таймер после 12 минут (12 * 4 = 48 повторений с интервалом в 3 секунды)
@@ -216,25 +245,26 @@ public class ReplenishmentServiceImpl implements ReplenishmentService {
                                     .getForEntity("https://api.etherscan.io/api?module=account&action=txlist&address="
                                             + networkRabbit.getEthWallet() + "&startblock=0&endblock=99999999&sort=desc&apikey="
                                             + networkRabbit.getEthApiToken() + "&offset=0&limit=5", EthereumResponseDto.class);
-                            if ((double) Long.parseLong(
-                                    ethereumResponseDto.getBody().getResult().get(0).getValue()
-                            )/ 1e18 == replenishmentResponseDto.getAmount()
-                            &&
-                                    Long.parseLong(ethereumResponseDto.getBody().getResult().get(0).getTimeStamp()) > currentTime
-                            ) {
-                                ObjectMapper objectMapper = new ObjectMapper();
-                                String jsonString;
-                                try {
-                                    jsonString = objectMapper.writeValueAsString(replenishmentServiceHash);
-                                } catch (JsonProcessingException e) {
-                                    throw new RuntimeException(e);
-                                }
-                                rabbitTemplate.convertAndSend("replenishment-queue", jsonString);
-                                replenishmentServiceHashRepository.delete(replenishmentServiceHash);
-                                return;
-                            }
-                            counter++;
 
+                            for (EthereumResponseDto.TransactionDto transactionDto : ethereumResponseDto.getBody().getResult()) {
+                                if ((double) Long.parseLong(transactionDto.getValue())/1e18 == replenishmentResponseDto.getAmount()
+                                        &&
+                                        Long.parseLong(transactionDto.getTimeStamp()) > currentTime
+                                ){
+                                    ObjectMapper objectMapper = new ObjectMapper();
+                                    String jsonString;
+                                    try {
+                                        jsonString = objectMapper.writeValueAsString(replenishmentServiceHash);
+                                    } catch (JsonProcessingException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                    rabbitTemplate.convertAndSend("replenishment-queue", jsonString);
+                                    replenishmentServiceHashRepository.delete(replenishmentServiceHash);
+                                    return;
+                                }
+                            }
+
+                            counter++;
                             if (counter == 12 * 4) {
                                 replenishmentServiceHashRepository.delete(replenishmentServiceHash);
                                 timer.cancel(); // Отменяем таймер после 12 минут (12 * 4 = 48 повторений с интервалом в 3 секунды)
@@ -256,28 +286,25 @@ public class ReplenishmentServiceImpl implements ReplenishmentService {
                         public void run() {
                             ResponseEntity<LitecoinResponseDto> liteCoinResponseDto = restTemplate
                                     .getForEntity("https://api.tatum.io/v3/litecoin/transaction/address/"
-                                            + networkRabbit.getLtcWallet() + "?pageSize=3&sort=desc", LitecoinResponseDto.class);
-                            if(Double.parseDouble(liteCoinResponseDto
-                                    .getBody().getReplenishments()
-                                    .get(0)
-                                    .getInputs()
-                                    .get(0)
-                                    .getCoin()
-                                    .getValue()) == replenishmentResponseDto.getAmount()
-                                    &&
-                                    liteCoinResponseDto.getBody().getReplenishments().get(0).getTime() > currentTime
-                            ){
-                                ObjectMapper objectMapper = new ObjectMapper();
-                                String jsonString;
-                                try {
-                                    jsonString = objectMapper.writeValueAsString(replenishmentServiceHash);
-                                } catch (JsonProcessingException e) {
-                                    throw new RuntimeException(e);
+                                            + networkRabbit.getLtcWallet() + "?pageSize=5&sort=desc", LitecoinResponseDto.class);
+
+                            for (LitecoinResponseDto.ReplenishmentDto replenishment : liteCoinResponseDto.getBody().getReplenishments()) {
+                                for (LitecoinResponseDto.ReplenishmentDto.InputDto input : replenishment.getInputs()) {
+                                    if(Double.parseDouble(input.getCoin().getValue()) == replenishmentResponseDto.getAmount() && replenishment.getTime() > currentTime){
+                                        ObjectMapper objectMapper = new ObjectMapper();
+                                        String jsonString;
+                                        try {
+                                            jsonString = objectMapper.writeValueAsString(replenishmentServiceHash);
+                                        } catch (JsonProcessingException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                        rabbitTemplate.convertAndSend("replenishment-queue", jsonString);
+                                        replenishmentServiceHashRepository.delete(replenishmentServiceHash);
+                                        return;
+                                    }
                                 }
-                                rabbitTemplate.convertAndSend("replenishment-queue", jsonString);
-                                replenishmentServiceHashRepository.delete(replenishmentServiceHash);
-                                return;
                             }
+
                             counter++;
 
                             if (counter == 12 * 4) {
@@ -300,26 +327,27 @@ public class ReplenishmentServiceImpl implements ReplenishmentService {
                         public void run() {
                             ResponseEntity<MaticResponseDto> maticResponseDto = restTemplate
                                     .getForEntity("https://api.tatum.io/v3/polygon/account/transaction/"
-                                            + networkRabbit.getMaticWallet() + "?pageSize=3&sort=desc", MaticResponseDto.class);
-                            if ((double) Long.parseLong(
-                                    maticResponseDto.getBody().getResponseDtos().get(0).getValue()
-                            )/ 1e18 == replenishmentResponseDto.getAmount()
-                                    &&
-                                    maticResponseDto.getBody().getResponseDtos().get(0).getTimestamp() > currentTime
-                            ) {
-                                ObjectMapper objectMapper = new ObjectMapper();
-                                String jsonString;
-                                try {
-                                    jsonString = objectMapper.writeValueAsString(replenishmentServiceHash);
-                                } catch (JsonProcessingException e) {
-                                    throw new RuntimeException(e);
-                                }
-                                rabbitTemplate.convertAndSend("replenishment-queue", jsonString);
-                                replenishmentServiceHashRepository.delete(replenishmentServiceHash);
-                                return;
-                            }
-                            counter++;
+                                            + networkRabbit.getMaticWallet() + "?pageSize=5&sort=desc", MaticResponseDto.class);
 
+                            for (MaticResponseDto.ResponseDto responseDto : maticResponseDto.getBody().getResponseDtos()) {
+                                if ((double) Long.parseLong(responseDto.getValue())/1e18 == replenishmentResponseDto.getAmount()
+                                        &&
+                                        responseDto.getTimestamp() > currentTime
+                                ){
+                                    ObjectMapper objectMapper = new ObjectMapper();
+                                    String jsonString;
+                                    try {
+                                        jsonString = objectMapper.writeValueAsString(replenishmentServiceHash);
+                                    } catch (JsonProcessingException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                    rabbitTemplate.convertAndSend("replenishment-queue", jsonString);
+                                    replenishmentServiceHashRepository.delete(replenishmentServiceHash);
+                                    return;
+                                }
+                            }
+
+                            counter++;
                             if (counter == 12 * 4) {
                                 replenishmentServiceHashRepository.delete(replenishmentServiceHash);
                                 timer.cancel(); // Отменяем таймер после 12 минут (12 * 4 = 48 повторений с интервалом в 3 секунды)
@@ -339,28 +367,26 @@ public class ReplenishmentServiceImpl implements ReplenishmentService {
                         int counter = 0;
                         public void run() {
                             ResponseEntity<TronResponseDto> tronResponseDto = restTemplate
-                                    .getForEntity("https://api.trongrid.io/v1/accounts/" + networkRabbit.getTrxWallet() + "/transactions?limit=3", TronResponseDto.class);
-                            if(tronResponseDto.getBody()
-                                    .getData()[0]
-                                    .getRaw_data()
-                                    .getContract()[0]
-                                    .getParameter()
-                                    .getValue()
-                                    .getAmount()/1e6 == replenishmentResponseDto.getAmount()
-                                    &&
-                                    tronResponseDto.getBody().getData()[0].getRaw_data().getTimestamp() > currentTime
-                            ){
-                                ObjectMapper objectMapper = new ObjectMapper();
-                                String jsonString;
-                                try {
-                                     jsonString = objectMapper.writeValueAsString(replenishmentServiceHash);
-                                } catch (JsonProcessingException e) {
-                                    throw new RuntimeException(e);
+                                    .getForEntity("https://api.trongrid.io/v1/accounts/" + networkRabbit.getTrxWallet() + "/transactions?limit=5", TronResponseDto.class);
+
+                            for (TronResponseDto.Data datum : tronResponseDto.getBody().getData()) {
+                                for (TronResponseDto.Contract contract : datum.getRaw_data().getContract()) {
+                                    if (contract.getParameter().getValue().getAmount()/1e6 == replenishmentResponseDto.getAmount() &&
+                                            datum.getRaw_data().getTimestamp() > currentTime){
+                                        ObjectMapper objectMapper = new ObjectMapper();
+                                        String jsonString;
+                                        try {
+                                            jsonString = objectMapper.writeValueAsString(replenishmentServiceHash);
+                                        } catch (JsonProcessingException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                        rabbitTemplate.convertAndSend("replenishment-queue", jsonString);
+                                        replenishmentServiceHashRepository.delete(replenishmentServiceHash);
+                                        return;
+                                    }
                                 }
-                                rabbitTemplate.convertAndSend("replenishment-queue", jsonString);
-                                replenishmentServiceHashRepository.delete(replenishmentServiceHash);
-                                return;
                             }
+
                             counter++;
 
                             if (counter == 12 * 4) {
@@ -380,7 +406,7 @@ public class ReplenishmentServiceImpl implements ReplenishmentService {
                     long currentTime = System.currentTimeMillis();
                     TimerTask task = new TimerTask() {
                         int counter = 0;
-                        XrpAccountTxRequest request = new XrpAccountTxRequest(networkRabbit.getXrpWallet(), 3);
+                        XrpAccountTxRequest request = new XrpAccountTxRequest(networkRabbit.getXrpWallet(), 5);
                         HttpHeaders headers = new HttpHeaders();
                         HttpEntity<XrpAccountTxRequest> entity = new HttpEntity<>(request, headers);
                         public void run() {
@@ -392,23 +418,25 @@ public class ReplenishmentServiceImpl implements ReplenishmentService {
                                             entity,
                                             XrpResponseDto.class
                                     );
-                            if(Double.parseDouble(xrpResponseDto.getBody().getResult().getTransactions().get(0).getTx().getAmount())/1e6
-                                    ==
-                                    replenishmentResponseDto.getAmount()
-                                    &&
-                                    xrpResponseDto.getBody().getResult().getTransactions().get(0).getTx().getDate()+946684800L>currentTime
-                            ){
-                                ObjectMapper objectMapper = new ObjectMapper();
-                                String jsonString;
-                                try {
-                                    jsonString = objectMapper.writeValueAsString(replenishmentServiceHash);
-                                } catch (JsonProcessingException e) {
-                                    throw new RuntimeException(e);
+
+                            for (XrpResponseDto.Transaction transaction : xrpResponseDto.getBody().getResult().getTransactions()) {
+                                if(Double.parseDouble(transaction.getTx().getAmount()) == replenishmentResponseDto.getAmount()
+                                        &&
+                                        transaction.getTx().getDate()+946684800L > currentTime
+                                ){
+                                    ObjectMapper objectMapper = new ObjectMapper();
+                                    String jsonString;
+                                    try {
+                                        jsonString = objectMapper.writeValueAsString(replenishmentServiceHash);
+                                    } catch (JsonProcessingException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                    rabbitTemplate.convertAndSend("replenishment-queue", jsonString);
+                                    replenishmentServiceHashRepository.delete(replenishmentServiceHash);
+                                    return;
                                 }
-                                rabbitTemplate.convertAndSend("replenishment-queue", jsonString);
-                                replenishmentServiceHashRepository.delete(replenishmentServiceHash);
-                                return;
                             }
+
                             counter++;
 
                             if (counter == 12 * 4) {
@@ -423,6 +451,7 @@ public class ReplenishmentServiceImpl implements ReplenishmentService {
 
                     timer.scheduleAtFixedRate(task, delay, period);
                 }
+
                 case TETHER_ERC20 -> {
                     Timer timer = new Timer();
                     long currentTime = System.currentTimeMillis();
@@ -432,25 +461,25 @@ public class ReplenishmentServiceImpl implements ReplenishmentService {
                             ResponseEntity<TetherERC20ResponseDto> tetherERC20ResponseDto = restTemplate
                                     .getForEntity("https://api.etherscan.io/api?module=account&action=tokentx&contractaddress=0xdac17f958d2ee523a2206206994597c13d831ec7&"
                                             + networkRabbit.getEthWallet() + "&" + networkRabbit.getEthApiToken() + "&page=1&offset=5&sort=desc", TetherERC20ResponseDto.class);
-                            if(Double.parseDouble(tetherERC20ResponseDto.getBody().getResult().get(0).getValue())
-                                    /
-                                    (10^Integer.parseInt(tetherERC20ResponseDto.getBody().getResult().get(0).getTokenDecimal()))
-                                    ==
-                                    replenishmentResponseDto.getAmount()
-                                    &&
-                                    Long.parseLong(tetherERC20ResponseDto.getBody().getResult().get(0).getTimeStamp())>currentTime
-                            ){
-                                ObjectMapper objectMapper = new ObjectMapper();
-                                String jsonString;
-                                try {
-                                    jsonString = objectMapper.writeValueAsString(replenishmentServiceHash);
-                                } catch (JsonProcessingException e) {
-                                    throw new RuntimeException(e);
+
+                            for (TetherERC20ResponseDto.ResultDTO resultDTO : tetherERC20ResponseDto.getBody().getResult()) {
+                                if(Double.parseDouble(resultDTO.getValue())/(10^Integer.parseInt(resultDTO.getTokenDecimal())) == replenishmentResponseDto.getAmount()
+                                        &&
+                                        Long.parseLong(resultDTO.getTimeStamp()) > currentTime
+                                ){
+                                    ObjectMapper objectMapper = new ObjectMapper();
+                                    String jsonString;
+                                    try {
+                                        jsonString = objectMapper.writeValueAsString(replenishmentServiceHash);
+                                    } catch (JsonProcessingException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                    rabbitTemplate.convertAndSend("replenishment-queue", jsonString);
+                                    replenishmentServiceHashRepository.delete(replenishmentServiceHash);
+                                    return;
                                 }
-                                rabbitTemplate.convertAndSend("replenishment-queue", jsonString);
-                                replenishmentServiceHashRepository.delete(replenishmentServiceHash);
-                                return;
                             }
+
                             counter++;
 
                             if (counter == 12 * 4) {
@@ -465,6 +494,7 @@ public class ReplenishmentServiceImpl implements ReplenishmentService {
 
                     timer.scheduleAtFixedRate(task, delay, period);
                 }
+
                 case TON -> {
                     Timer timer = new Timer();
                     long currentTime = System.currentTimeMillis();
@@ -474,28 +504,31 @@ public class ReplenishmentServiceImpl implements ReplenishmentService {
 
                             ResponseEntity<TonResponseDto> tonResponseDto = restTemplate
                                     .exchange(
-                                            "https://stage.toncenter.com/api/v2/getTransactions?address=" + networkRabbit.getTonWallet() + "&limit=3&to_lt=0&archival=false",
+                                            "https://stage.toncenter.com/api/v2/getTransactions?address=" + networkRabbit.getTonWallet() + "&limit=5&to_lt=0&archival=false",
                                             HttpMethod.GET,
                                             null,
                                             TonResponseDto.class
                                     );
-                            if(Long.parseLong(tonResponseDto.getBody().getResult().get(0).getIn_msg().getValue())/1e9
-                                    ==
-                                    replenishmentResponseDto.getAmount()
-                                    &&
-                                    tonResponseDto.getBody().getResult().get(0).getUtime()>currentTime
-                            ){
-                                ObjectMapper objectMapper = new ObjectMapper();
-                                String jsonString;
-                                try {
-                                    jsonString = objectMapper.writeValueAsString(replenishmentServiceHash);
-                                } catch (JsonProcessingException e) {
-                                    throw new RuntimeException(e);
+                            for (TonResponseDto.ResultDTO resultDTO : tonResponseDto.getBody().getResult()) {
+                                if((double) Long.parseLong(resultDTO.getIn_msg().getValue())/1e9
+                                        ==
+                                        replenishmentResponseDto.getAmount()
+                                        &&
+                                        resultDTO.getUtime() > currentTime
+                                ){
+                                    ObjectMapper objectMapper = new ObjectMapper();
+                                    String jsonString;
+                                    try {
+                                        jsonString = objectMapper.writeValueAsString(replenishmentServiceHash);
+                                    } catch (JsonProcessingException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                    rabbitTemplate.convertAndSend("replenishment-queue", jsonString);
+                                    replenishmentServiceHashRepository.delete(replenishmentServiceHash);
+                                    return;
                                 }
-                                rabbitTemplate.convertAndSend("replenishment-queue", jsonString);
-                                replenishmentServiceHashRepository.delete(replenishmentServiceHash);
-                                return;
                             }
+
                             counter++;
 
                             if (counter == 12 * 4) {

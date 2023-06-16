@@ -2,9 +2,11 @@ package ru.panic.template.dto.crypto;
 
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 public class TronResponseDto {
-    public Data[] data;
+    public List<Data> data;
     @Getter
     public static class Data {
         public Ret[] ret;
@@ -28,7 +30,7 @@ public class TronResponseDto {
     }
     @Getter
     public static class RawData {
-        public Contract[] contract;
+        public List<Contract> contract;
         public String ref_block_bytes;
         public String ref_block_hash;
         public long expiration;

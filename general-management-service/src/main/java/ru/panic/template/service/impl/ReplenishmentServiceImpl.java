@@ -20,15 +20,7 @@ public class ReplenishmentServiceImpl implements ReplenishmentService {
     @Transactional
     @Override
     public void handleReplenishment(ReplenishmentHashRequestDto request) {
-        Replenishment replenishment = new Replenishment();
-        replenishment.setUsername(request.getUsername());
-        replenishment.setAmount(request.getAmount());
-        replenishment.setCurrency(request.getCryptoCurrency());
-        replenishment.setTimestamp(request.getTimestamp());
-
-        replenishmentRepository.save(replenishment);
-
-        User user = userRepository.findUserByUsername(request.getUsername());
+        User user = userRepository.findById(request.getUserId()).orElseThrow();
         switch (request.getCryptoCurrency()){
             case BTC -> user.getData().setBtcBalance(user.getData().getBtcBalance()+request.getAmount());
 
@@ -36,9 +28,9 @@ public class ReplenishmentServiceImpl implements ReplenishmentService {
 
             case LTC -> user.getData().setLtcBalance(user.getData().getLtcBalance()+request.getAmount());
 
-            case TON -> user.getData().setTonBalance(user.getData().getTonBalance()+request.getAmount());
-
             case TRX -> user.getData().setTrxBalance(user.getData().getTrxBalance()+request.getAmount());
+
+            case TON -> user.getData().setTonBalance(user.getData().getTonBalance()+request.getAmount());
 
             case XRP -> user.getData().setXrpBalance(user.getData().getXrpBalance()+request.getAmount());
 
@@ -48,5 +40,14 @@ public class ReplenishmentServiceImpl implements ReplenishmentService {
         }
 
         userRepository.save(user);
+
+        Replenishment replenishment = new Replenishment();
+        replenishment.setUserId(request.getUserId());
+        replenishment.setUsername(request.getUsername());
+        replenishment.setAmount(request.getAmount());
+        replenishment.setCurrency(request.getCryptoCurrency());
+        replenishment.setTimestamp(request.getTimestamp());
+
+        replenishmentRepository.save(replenishment);
     }
 }

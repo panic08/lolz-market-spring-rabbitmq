@@ -10,6 +10,7 @@ import ru.panic.template.enums.CryptoCurrency;
 public class ReplenishmentServiceHash {
     @Id
     private String username;
+    private Long userId;
     private Double amount;
     private CryptoCurrency cryptoCurrency;
     private Long timestamp;
