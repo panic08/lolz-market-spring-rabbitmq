@@ -27,7 +27,7 @@ public class WithdrawalController {
     private List<Withdrawal> getAllWithdrawalsById(
             @RequestHeader String jwtToken
     ){
-        return withdrawalService.getAllWithdrawalsById(jwtToken);
+        return withdrawalService.getAllWithdrawalsByUserId(jwtToken);
     }
     @DeleteMapping("/cancelWithdrawalById")
     private void cancelWithdrawalById(

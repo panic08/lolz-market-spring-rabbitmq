@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface WithdrawalService {
     WithdrawalResponseDto createWithdrawal(String jwtToken, WithdrawalRequestDto request);
-    List<Withdrawal> getAllWithdrawalsById(String jwtToken);
+    List<Withdrawal> getAllWithdrawalsByUserId(String jwtToken);
     void removeWithdrawalById(String jwtToken, Withdrawal withdrawal);
     void updateStatusById(String jwtToken, Withdrawal withdrawal, Status status);
 }
