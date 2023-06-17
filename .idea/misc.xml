@@ -9,11 +9,14 @@
         <option value="$PROJECT_DIR$/replenishment-service/pom.xml" />
         <option value="$PROJECT_DIR$/general-management-service/pom.xml" />
         <option value="$PROJECT_DIR$/withdrawal-service/pom.xml" />
+        <option value="$PROJECT_DIR$/game-dice-service/pom.xml" />
+        <option value="$PROJECT_DIR$/games-service/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/file-service/pom.xml" />
+        <option value="$PROJECT_DIR$/game-dice-service/pom.xml" />
       </set>
     </option>
   </component>

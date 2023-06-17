@@ -110,73 +110,73 @@ public class ReplenishmentServiceImpl implements ReplenishmentService {
         switch (request.getCryptoCurrency()) {
             case BTC -> {
                 switch (request.getCurrency()) {
-                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getBitcoin().getRub(), 1e8);
-                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getBitcoin().getEur(), 1e8);
-                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getBitcoin().getUsd(), 1e8);
-                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getBitcoin().getPln(), 1e8);
+                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getBitcoin().getRub(), 1e6);
+                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getBitcoin().getEur(), 1e6);
+                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getBitcoin().getUsd(), 1e6);
+                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getBitcoin().getPln(), 1e6);
                 }
                 replenishmentResponseDto.setWalletId(networkRabbit.getBtcWallet());
             }
             case ETH -> {
                 switch (request.getCurrency()) {
-                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getEthereum().getRub(), 1e6);
-                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getEthereum().getEur(), 1e6);
-                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getEthereum().getUsd(), 1e6);
-                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getEthereum().getPln(), 1e6);
+                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getEthereum().getRub(), 1e5);
+                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getEthereum().getEur(), 1e5);
+                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getEthereum().getUsd(), 1e5);
+                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getEthereum().getPln(), 1e5);
                 }
                 replenishmentResponseDto.setWalletId(networkRabbit.getEthWallet());
             }
             case LTC -> {
                 switch (request.getCurrency()) {
-                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getLitecoin().getRub(), 1e5);
-                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getLitecoin().getEur(), 1e5);
-                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getLitecoin().getUsd(), 1e5);
-                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getLitecoin().getPln(), 1e5);
+                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getLitecoin().getRub(), 1e4);
+                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getLitecoin().getEur(), 1e4);
+                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getLitecoin().getUsd(), 1e4);
+                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getLitecoin().getPln(), 1e4);
                 }
                 replenishmentResponseDto.setWalletId(networkRabbit.getLtcWallet());
             }
             case TETHER_ERC20 -> {
                 switch (request.getCurrency()) {
-                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTether().getRub(), 1e3);
-                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTether().getEur(), 1e3);
-                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTether().getUsd(), 1e3);
-                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTether().getPln(), 1e3);
+                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTether().getRub(), 1e2);
+                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTether().getEur(), 1e2);
+                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTether().getUsd(), 1e2);
+                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTether().getPln(), 1e2);
                 }
                 replenishmentResponseDto.setWalletId(networkRabbit.getTetherERC20Wallet());
             }
             case TRX -> {
                 switch (request.getCurrency()) {
-                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTron().getRub(), 1e3);
-                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTron().getEur(), 1e3);
-                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTron().getUsd(), 1e3);
-                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTron().getPln(), 1e3);
+                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTron().getRub(), 1e2);
+                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTron().getEur(), 1e2);
+                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTron().getUsd(), 1e2);
+                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTron().getPln(), 1e2);
                 }
                 replenishmentResponseDto.setWalletId(networkRabbit.getTrxWallet());
             }
             case MATIC -> {
                 switch (request.getCurrency()) {
-                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getMaticNetwork().getRub(), 1e3);
-                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getMaticNetwork().getEur(), 1e3);
-                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getMaticNetwork().getUsd(), 1e3);
-                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getMaticNetwork().getPln(), 1e3);
+                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getMaticNetwork().getRub(), 1e2);
+                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getMaticNetwork().getEur(), 1e2);
+                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getMaticNetwork().getUsd(), 1e2);
+                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getMaticNetwork().getPln(), 1e2);
                 }
                 replenishmentResponseDto.setWalletId(networkRabbit.getMaticWallet());
             }
             case XRP -> {
                 switch (request.getCurrency()) {
-                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getRipple().getRub(), 1e3);
-                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getRipple().getEur(), 1e3);
-                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getRipple().getUsd(), 1e3);
-                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getRipple().getPln(), 1e3);
+                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getRipple().getRub(), 1e2);
+                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getRipple().getEur(), 1e2);
+                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getRipple().getUsd(), 1e2);
+                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getRipple().getPln(), 1e2);
                 }
                 replenishmentResponseDto.setWalletId(networkRabbit.getXrpWallet());
             }
             case TON -> {
                 switch (request.getCurrency()) {
-                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTheOpenNetwork().getRub(), 1e3);
-                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTheOpenNetwork().getEur(), 1e3);
-                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTheOpenNetwork().getUsd(), 1e3);
-                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTheOpenNetwork().getPln(), 1e3);
+                    case RUB -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTheOpenNetwork().getRub(), 1e2);
+                    case EUR -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTheOpenNetwork().getEur(), 1e2);
+                    case USD -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTheOpenNetwork().getUsd(), 1e2);
+                    case PLN -> setRoundedAmount(replenishmentResponseDto, request.getAmount().doubleValue() / crypto.getTheOpenNetwork().getPln(), 1e2);
                 }
                 replenishmentResponseDto.setWalletId(networkRabbit.getTonWallet());
             }

@@ -12,6 +12,7 @@ import ru.panic.template.dto.WithdrawalResponseDto;
 import ru.panic.template.entity.Withdrawal;
 import ru.panic.template.enums.Status;
 import ru.panic.template.exception.InvalidCredentialsException;
+import ru.panic.template.repository.impl.UserRepositoryImpl;
 import ru.panic.template.repository.impl.WithdrawalRepositoryImpl;
 import ru.panic.template.service.WithdrawalService;
 
@@ -19,14 +20,17 @@ import java.util.List;
 
 @Service
 public class WithdrawalServiceImpl implements WithdrawalService {
-    public WithdrawalServiceImpl(RestTemplate restTemplate, RabbitTemplate rabbitTemplate, WithdrawalRepositoryImpl withdrawalRepository) {
+    public WithdrawalServiceImpl(RestTemplate restTemplate, RabbitTemplate rabbitTemplate, WithdrawalRepositoryImpl withdrawalRepository, UserRepositoryImpl userRepository) {
         this.restTemplate = restTemplate;
         this.rabbitTemplate = rabbitTemplate;
         this.withdrawalRepository = withdrawalRepository;
+        this.userRepository = userRepository;
     }
+
     private final RestTemplate restTemplate;
     private final RabbitTemplate rabbitTemplate;
     private final WithdrawalRepositoryImpl withdrawalRepository;
+    private final UserRepositoryImpl userRepository;
     @Override
     public WithdrawalResponseDto createWithdrawal(String jwtToken, WithdrawalRequestDto request) {
         ResponseEntity<UserResponseDto> userResponseDto = restTemplate.getForEntity("http://localhost:8080/api/v1/getInfoByJwt?jwtToken=" + jwtToken, UserResponseDto.class);
@@ -159,7 +163,19 @@ public class WithdrawalServiceImpl implements WithdrawalService {
             throw new InvalidCredentialsException("Вы не можете отменить этот вывод");
         }
 
+        switch (withdrawal.getCurrency()){
+            case BTC -> userRepository.updateBtcBalanceById(userResponseDto.getBody().getId(), withdrawal.getAmount());
+            case ETH -> userRepository.updateEthBalanceById(userResponseDto.getBody().getId(), withdrawal.getAmount());
+            case LTC -> userRepository.updateLtcBalanceById(userResponseDto.getBody().getId(), withdrawal.getAmount());
+            case TON -> userRepository.updateTonBalanceById(userResponseDto.getBody().getId(), withdrawal.getAmount());
+            case TRX -> userRepository.updateTrxBalanceById(userResponseDto.getBody().getId(), withdrawal.getAmount());
+            case XRP -> userRepository.updateXrpBalanceById(userResponseDto.getBody().getId(), withdrawal.getAmount());
+            case MATIC -> userRepository.updateMaticBalanceById(userResponseDto.getBody().getId(), withdrawal.getAmount());
+            case TETHER_ERC20 -> userRepository.updateTetherERC20BalanceById(userResponseDto.getBody().getId(), withdrawal.getAmount());
+        }
+
         withdrawalRepository.updateStatusById(withdrawal.getId(), status);
+
     }
 
 }

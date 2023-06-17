@@ -10,17 +10,21 @@
         <module name="withdrawal-service" />
         <module name="auth-service" />
         <module name="replenishment-service" />
+        <module name="games-service" />
         <module name="general-management-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="file-service" target="17" />
+      <module name="game-dice-service" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="auth-service" options="-parameters" />
       <module name="file-service" options="-parameters" />
+      <module name="game-dice-service" options="-parameters" />
+      <module name="games-service" options="-parameters" />
       <module name="general-management-service" options="-parameters" />
       <module name="replenishment-service" options="-parameters" />
       <module name="withdrawal-service" options="-parameters" />
