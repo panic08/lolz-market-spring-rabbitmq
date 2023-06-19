@@ -38,7 +38,6 @@ public class User implements UserDetails {
         private Double xrpBalance;
         private Double maticBalance;
         private Double tonBalance;
-        private Double demoBalance;
         private String ipAddress;
         @Embedded
         private Level level;
@@ -48,6 +47,7 @@ public class User implements UserDetails {
         @NoArgsConstructor
         @lombok.Data
         public static class Level{
+            @Enumerated(EnumType.STRING)
             private Rank rank;
             private Double progress;
         }
@@ -59,6 +59,7 @@ public class User implements UserDetails {
         private String firstname;
         private String lastname;
         private String birthday;
+        @Enumerated(EnumType.STRING)
         private Gender gender;
         @Embedded
         private Address address;

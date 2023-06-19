@@ -8,15 +8,15 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="withdrawal-service" />
+        <module name="game-dice-service" />
         <module name="auth-service" />
         <module name="replenishment-service" />
-        <module name="games-service" />
         <module name="general-management-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="file-service" target="17" />
-      <module name="game-dice-service" target="17" />
+      <module name="games-service" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

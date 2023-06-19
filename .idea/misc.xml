@@ -16,11 +16,11 @@
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/file-service/pom.xml" />
-        <option value="$PROJECT_DIR$/game-dice-service/pom.xml" />
+        <option value="$PROJECT_DIR$/games-service/pom.xml" />
       </set>
     </option>
   </component>
-  <component name="ProjectRootManager">
+  <component name="ProjectRootManager" version="2" project-jdk-name="corretto-17" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>

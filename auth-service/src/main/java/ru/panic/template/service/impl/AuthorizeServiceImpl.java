@@ -79,7 +79,6 @@ public class AuthorizeServiceImpl implements AuthorizeService {
         data.setLtcBalance(0D);
         data.setMaticBalance(0D);
         data.setTonBalance(0D);
-        data.setDemoBalance(0D);
         data.setTetherERC20Balance(0D);
         data.setLevel(new User.Data.Level(Rank.BRONZE, 0D));
         data.setIpAddress(signInRequest.getData().getIpAddress());

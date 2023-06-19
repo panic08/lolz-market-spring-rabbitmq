@@ -27,7 +27,6 @@ public class UserResponseDto {
         private Double xrpBalance;
         private Double maticBalance;
         private Double tonBalance;
-        private Double demoBalance;
         private String ipAddress;
         private Level level;
         private Boolean isAccountNonLocked;
