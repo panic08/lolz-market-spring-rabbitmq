@@ -9,12 +9,16 @@ import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.Internal;
 
+import ru.panic.generatedClasses.tables.FlywaySchemaHistory;
 import ru.panic.generatedClasses.tables.Games;
 import ru.panic.generatedClasses.tables.Replenishments;
 import ru.panic.generatedClasses.tables.Users;
+import ru.panic.generatedClasses.tables.UsersActivity;
 import ru.panic.generatedClasses.tables.Withdrawals;
+import ru.panic.generatedClasses.tables.records.FlywaySchemaHistoryRecord;
 import ru.panic.generatedClasses.tables.records.GamesRecord;
 import ru.panic.generatedClasses.tables.records.ReplenishmentsRecord;
+import ru.panic.generatedClasses.tables.records.UsersActivityRecord;
 import ru.panic.generatedClasses.tables.records.UsersRecord;
 import ru.panic.generatedClasses.tables.records.WithdrawalsRecord;
 
@@ -30,8 +34,10 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final UniqueKey<FlywaySchemaHistoryRecord> FLYWAY_SCHEMA_HISTORY_PK = Internal.createUniqueKey(FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY, DSL.name("flyway_schema_history_pk"), new TableField[] { FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY.INSTALLED_RANK }, true);
     public static final UniqueKey<GamesRecord> GAMES_PKEY = Internal.createUniqueKey(Games.GAMES, DSL.name("games_pkey"), new TableField[] { Games.GAMES.ID }, true);
     public static final UniqueKey<ReplenishmentsRecord> REPLENISHMENTS_PKEY = Internal.createUniqueKey(Replenishments.REPLENISHMENTS, DSL.name("replenishments_pkey"), new TableField[] { Replenishments.REPLENISHMENTS.ID }, true);
     public static final UniqueKey<UsersRecord> USERS_PKEY = Internal.createUniqueKey(Users.USERS, DSL.name("users_pkey"), new TableField[] { Users.USERS.ID }, true);
+    public static final UniqueKey<UsersActivityRecord> USERS_ACTIVITY_PKEY = Internal.createUniqueKey(UsersActivity.USERS_ACTIVITY, DSL.name("users_activity_pkey"), new TableField[] { UsersActivity.USERS_ACTIVITY.ID }, true);
     public static final UniqueKey<WithdrawalsRecord> WITHDRAWALS_PKEY = Internal.createUniqueKey(Withdrawals.WITHDRAWALS, DSL.name("withdrawals_pkey"), new TableField[] { Withdrawals.WITHDRAWALS.ID }, true);
 }

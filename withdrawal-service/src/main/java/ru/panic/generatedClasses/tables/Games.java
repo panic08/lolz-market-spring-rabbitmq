@@ -4,11 +4,8 @@
 package ru.panic.generatedClasses.tables;
 
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.Function;
 
-import org.jooq.Check;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Function8;
@@ -24,7 +21,6 @@ import org.jooq.TableField;
 import org.jooq.TableOptions;
 import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
-import org.jooq.impl.Internal;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 
@@ -57,7 +53,17 @@ public class Games extends TableImpl<GamesRecord> {
     /**
      * The column <code>public.games.id</code>.
      */
-    public final TableField<GamesRecord, Long> ID = createField(DSL.name("id"), SQLDataType.BIGINT.nullable(false).identity(true), this, "");
+    public final TableField<GamesRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
+
+    /**
+     * The column <code>public.games.user_id</code>.
+     */
+    public final TableField<GamesRecord, Long> USER_ID = createField(DSL.name("user_id"), SQLDataType.BIGINT.nullable(false), this, "");
+
+    /**
+     * The column <code>public.games.username</code>.
+     */
+    public final TableField<GamesRecord, String> USERNAME = createField(DSL.name("username"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
      * The column <code>public.games.amount</code>.
@@ -83,16 +89,6 @@ public class Games extends TableImpl<GamesRecord> {
      * The column <code>public.games.timestamp</code>.
      */
     public final TableField<GamesRecord, Long> TIMESTAMP = createField(DSL.name("timestamp"), SQLDataType.BIGINT.nullable(false), this, "");
-
-    /**
-     * The column <code>public.games.user_id</code>.
-     */
-    public final TableField<GamesRecord, Long> USER_ID = createField(DSL.name("user_id"), SQLDataType.BIGINT.nullable(false), this, "");
-
-    /**
-     * The column <code>public.games.username</code>.
-     */
-    public final TableField<GamesRecord, String> USERNAME = createField(DSL.name("username"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     private Games(Name alias, Table<GamesRecord> aliased) {
         this(alias, aliased, null);
@@ -133,22 +129,13 @@ public class Games extends TableImpl<GamesRecord> {
     }
 
     @Override
-    public Identity<GamesRecord, Long> getIdentity() {
-        return (Identity<GamesRecord, Long>) super.getIdentity();
+    public Identity<GamesRecord, Integer> getIdentity() {
+        return (Identity<GamesRecord, Integer>) super.getIdentity();
     }
 
     @Override
     public UniqueKey<GamesRecord> getPrimaryKey() {
         return Keys.GAMES_PKEY;
-    }
-
-    @Override
-    public List<Check<GamesRecord>> getChecks() {
-        return Arrays.asList(
-            Internal.createCheck(this, DSL.name("games_currency_check"), "(((currency)::text = ANY ((ARRAY['BTC'::character varying, 'ETH'::character varying, 'LTC'::character varying, 'TETHER_ERC20'::character varying, 'TRX'::character varying, 'MATIC'::character varying, 'XRP'::character varying, 'TON'::character varying])::text[])))", true),
-            Internal.createCheck(this, DSL.name("games_game_check"), "(((game)::text = ANY ((ARRAY['DICE'::character varying, 'MINER'::character varying])::text[])))", true),
-            Internal.createCheck(this, DSL.name("games_game_state_check"), "(((game_state)::text = ANY ((ARRAY['LOSE'::character varying, 'WIN'::character varying])::text[])))", true)
-        );
     }
 
     @Override
@@ -195,14 +182,14 @@ public class Games extends TableImpl<GamesRecord> {
     // -------------------------------------------------------------------------
 
     @Override
-    public Row8<Long, Double, String, String, String, Long, Long, String> fieldsRow() {
+    public Row8<Integer, Long, String, Double, String, String, String, Long> fieldsRow() {
         return (Row8) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function8<? super Long, ? super Double, ? super String, ? super String, ? super String, ? super Long, ? super Long, ? super String, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function8<? super Integer, ? super Long, ? super String, ? super Double, ? super String, ? super String, ? super String, ? super Long, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -210,7 +197,7 @@ public class Games extends TableImpl<GamesRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function8<? super Long, ? super Double, ? super String, ? super String, ? super String, ? super Long, ? super Long, ? super String, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function8<? super Integer, ? super Long, ? super String, ? super Double, ? super String, ? super String, ? super String, ? super Long, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

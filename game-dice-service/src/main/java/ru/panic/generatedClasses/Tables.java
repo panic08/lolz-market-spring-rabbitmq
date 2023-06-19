@@ -4,6 +4,7 @@
 package ru.panic.generatedClasses;
 
 
+import ru.panic.generatedClasses.tables.FlywaySchemaHistory;
 import ru.panic.generatedClasses.tables.Games;
 import ru.panic.generatedClasses.tables.Replenishments;
 import ru.panic.generatedClasses.tables.Users;
@@ -16,6 +17,11 @@ import ru.panic.generatedClasses.tables.Withdrawals;
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Tables {
+
+    /**
+     * The table <code>public.flyway_schema_history</code>.
+     */
+    public static final FlywaySchemaHistory FLYWAY_SCHEMA_HISTORY = FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY;
 
     /**
      * The table <code>public.games</code>.

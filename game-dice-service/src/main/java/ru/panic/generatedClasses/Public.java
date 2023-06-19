@@ -11,6 +11,7 @@ import org.jooq.Catalog;
 import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
 
+import ru.panic.generatedClasses.tables.FlywaySchemaHistory;
 import ru.panic.generatedClasses.tables.Games;
 import ru.panic.generatedClasses.tables.Replenishments;
 import ru.panic.generatedClasses.tables.Users;
@@ -30,6 +31,11 @@ public class Public extends SchemaImpl {
      * The reference instance of <code>public</code>
      */
     public static final Public PUBLIC = new Public();
+
+    /**
+     * The table <code>public.flyway_schema_history</code>.
+     */
+    public final FlywaySchemaHistory FLYWAY_SCHEMA_HISTORY = FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY;
 
     /**
      * The table <code>public.games</code>.
@@ -72,6 +78,7 @@ public class Public extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.asList(
+            FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY,
             Games.GAMES,
             Replenishments.REPLENISHMENTS,
             Users.USERS,

@@ -60,11 +60,6 @@ public class Users extends TableImpl<UsersRecord> {
     public final TableField<UsersRecord, Double> BTC_BALANCE = createField(DSL.name("btc_balance"), SQLDataType.DOUBLE, this, "");
 
     /**
-     * The column <code>public.users.demo_balance</code>.
-     */
-    public final TableField<UsersRecord, Double> DEMO_BALANCE = createField(DSL.name("demo_balance"), SQLDataType.DOUBLE, this, "");
-
-    /**
      * The column <code>public.users.eth_balance</code>.
      */
     public final TableField<UsersRecord, Double> ETH_BALANCE = createField(DSL.name("eth_balance"), SQLDataType.DOUBLE, this, "");
@@ -92,7 +87,7 @@ public class Users extends TableImpl<UsersRecord> {
     /**
      * The column <code>public.users.rank</code>.
      */
-    public final TableField<UsersRecord, Short> RANK = createField(DSL.name("rank"), SQLDataType.SMALLINT, this, "");
+    public final TableField<UsersRecord, String> RANK = createField(DSL.name("rank"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>public.users.ltc_balance</code>.
@@ -167,7 +162,7 @@ public class Users extends TableImpl<UsersRecord> {
     /**
      * The column <code>public.users.gender</code>.
      */
-    public final TableField<UsersRecord, Short> GENDER = createField(DSL.name("gender"), SQLDataType.SMALLINT, this, "");
+    public final TableField<UsersRecord, String> GENDER = createField(DSL.name("gender"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>public.users.lastname</code>.
@@ -230,8 +225,8 @@ public class Users extends TableImpl<UsersRecord> {
     @Override
     public List<Check<UsersRecord>> getChecks() {
         return Arrays.asList(
-            Internal.createCheck(this, DSL.name("users_gender_check"), "(((gender >= 0) AND (gender <= 2)))", true),
-            Internal.createCheck(this, DSL.name("users_rank_check"), "(((rank >= 0) AND (rank <= 5)))", true)
+            Internal.createCheck(this, DSL.name("users_gender_check"), "(((gender)::text = ANY ((ARRAY['MALE'::character varying, 'FEMALE'::character varying, 'OTHER'::character varying])::text[])))", true),
+            Internal.createCheck(this, DSL.name("users_rank_check"), "(((rank)::text = ANY ((ARRAY['BRONZE'::character varying, 'SILVER'::character varying, 'GOLD'::character varying, 'PLATINUM'::character varying, 'DIAMOND'::character varying, 'ELITE'::character varying])::text[])))", true)
         );
     }
 
